@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+        integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/vue@next"></script>
+<div id="app">
+    <input v-model="text" type="text">
+    <button v-on:click="send">Send</button>
+    <br>
+    {{ messages }}
+</div>
+<script type="text/javascript" charset="utf-8">
+
+    const Counter = {
+        data() {
+            return {
+                messages: [],
+                text: "hello everyone",
+                socket: null
+            }
+        },
+        created() {
+            this.socket = io();
+            this.socket.on('connect', function () {
+                // this.socket.
+                console.log('connected');
+            });
+            this.socket.on('update', (messages) => {
+                console.log('update');
+                this.messages = messages;
+            })
+        },
+        methods: {
+            send() {
+                this.socket.emit('message', {data: this.text});
+                this.text = "";
+            }
+        }
+    }
+    Vue.createApp(Counter).mount('#app')
+
+</script>
+</body>
+</html>
